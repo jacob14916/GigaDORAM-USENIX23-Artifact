@@ -9,11 +9,6 @@ echo "Which test did you want to run?"
 exit 1
 fi
 
-if [ $(basename $(pwd)) != 'DORAM' ] ; then
-echo "Run this from the DORAM directory"
-exit 1
-fi
-
 for i in 1 2 3 ; do
 public_ip_i=$(aws ec2 describe-instances --filter "Name=tag:Name,Values=$NAME_PREFIX$i" --query 'Reservations[0].Instances[0].PublicIpAddress' | tr -d '"')
 private_ip_i=$(aws ec2 describe-instances --filter "Name=tag:Name,Values=$NAME_PREFIX$i" --query 'Reservations[0].Instances[0].PrivateIpAddress' | tr -d '"')
