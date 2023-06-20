@@ -1,5 +1,7 @@
 # GigaDORAM USENIX Security 2023 Artifact
 
+[Watch our How To Video for this artifact!](https://youtu.be/ZRLwktR-1cI)
+
 - [GigaDORAM USENIX Security 2023 Artifact](#gigadoram-usenix-security-2023-artifact)
     - [Authors (listed alphabetically)](#authors-listed-alphabetically)
   - [Single machine tests](#single-machine-tests)
@@ -21,6 +23,8 @@
 * Jacob Zhang, `jacob dot b dot zhang at gmail dot com`
 
 This repo contains the artifact for the paper "GigaDORAM: Breaking the Billion Address Barrier" published in USENIX Security 2023. We provide directions and Python scripts for reproducing the experiments measuring GigaDORAM in the paper.
+
+[Watch our How To Video for this artifact!](https://youtu.be/ZRLwktR-1cI)
 
 ## Single machine tests
 
