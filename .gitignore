@@ -1,0 +1,64 @@
+# Build folder
+build*
+cmake-build-debug*
+
+# Program output
+*output.txt
+*tmp.txt
+*.cerr
+*.cout
+doram_build_log*
+doram_special_debug*
+doram_timing_report*
+benchmark_results*
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# perf & flame outputs
+*.perf
+perf.data*
+flame_*.svg
+
+#scratch text files
+scratch.*
+tmp.*
+doram_build_log.txt
+
+# I think this Clion 
+.idea
+#vscode 
+.vscode/*
+.vsls.json
+
+temp*
