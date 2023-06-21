@@ -201,11 +201,11 @@ The named arguments to `run_3_server_experiment.sh` are the same as for `benchma
 
 ## Benchmarking other DORAMs
 
-In this section, we briefly comment on the procedure we took to benchmark other DORAM constructions. For more discussion, please see Section 9, Figures 5 and 6, and Appendix E. 
+In this section, we briefly comment on the procedure we took to benchmark other DORAM constructions. For the settings we tested each construction in and additional discussions, please see Section 9, Figures 5 and 6, and Appendix E of the paper. 
 
-* DuORAM: We benchmark DuORAM via their well documented [dockerization](https://git-crysp.uwaterloo.ca/avadapal/duoram). For varying `numops` and `size`, we summed `./run_experiment read size numops preproc 3P` and `./run_experiment readwrite size numops online 3P` to account for both the online and offline costs of DuORAM. More information can be found in their README.
+* DuORAM: We benchmark DuORAM via their well documented [dockerization](https://git-crysp.uwaterloo.ca/avadapal/duoram). For varying `numops` and `size`, we summed `./run_experiment read size numops preproc 3P` and `./run_experiment readwrite size numops online 3P` to account for both the online and offline costs of protocol. More information can be found in their README.
 * 3PC-ORAM: We benchmarked 3PC-ORAM via the convenient [dockerization](https://git-crysp.uwaterloo.ca/iang/circuit-oram-docker/src/usenixsec23_artifact) graciously provided by the DuORAM team. Note that using `./run-experiment size numops` we benchmarked 3PC-ORAM's *reads*, which are no more expensive than writes.
-* Sqrt ORAM, Circuit ORAM, fss-FLORAM, cprg-FLORAM: We benchmark Sqrt ORAM, Circuit ORAM, fss-FLORAM, and cprg-FLORAM via Doerner and shelats' original [code](https://gitlab.com/neucrypt/floram). Due to a reliance on the somewhat supported [obliv-c](https://github.com/samee/obliv-c/) framework, we ran into some difficulties running their code. We try to give some helpful tips here (note: some of this steps may be redundent or unnecesseray -- we note what worked for us):  
+* Sqrt ORAM, Circuit ORAM, fss-FLORAM, cprg-FLORAM: We benchmark Sqrt ORAM, Circuit ORAM, fss-FLORAM, and cprg-FLORAM via Doerner and shelats' original [code](https://gitlab.com/neucrypt/floram). Due to a reliance on the somewhat supported [obliv-c](https://github.com/samee/obliv-c/) framework, we ran into some difficulties running their code. We try to give some helpful tips here (note: some of this steps may be redundent or incomplete -- we note here what worked for us):  
   * We started two Ubuntu 18.04.6 EC2 instances in a cluster placement group, one to be the "server" and the other to be the "client"
   * To install the needed old version of `ocaml`, `sudo apt install opam`, `opam switch create 4.06.0` `eval $(opam env --switch=4.06.0)`
   * To install the needed old version `gcc`, `sudo apt install -y gcc-9 g++-9 cpp-9`
