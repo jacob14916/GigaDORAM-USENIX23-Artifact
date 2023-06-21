@@ -12,7 +12,9 @@ GigaDORAM is specialized for the low-latency, large `N` setting. In these settin
 
 Roughly speaking, we benchmarked GigaDORAM in 2 different settings
 * Single machine tests: we execute GigaDORAM through 3 processes on the same machine. This enables us to artifically restrict the network between the machines processes via the `tc` command and benchmark the preformence of GigaDORAM in varying network settings.
-* Multi machine tests: we execute GigaDORAM on 3 different AWS EC2 instances in (cluster placement) on the same AWS region. These tests are meant to demonstrate the "real world" potential of GigaDORAM.    
+* Multi machine tests: we execute GigaDORAM on 3 different AWS EC2 instances in (cluster placement) on the same AWS region. These tests are meant to demonstrate the "real world" potential of GigaDORAM.
+
+Finally, we briefly comment on benchmarking other constructions
 
 **The absolute best way to reproduce our benchmarks is [THIS HOW TO VIDEO](https://youtu.be/ZRLwktR-1cI).** If that's not your style, see the written instructions below. 
 
@@ -30,6 +32,7 @@ Roughly speaking, we benchmarked GigaDORAM in 2 different settings
     - [Setup](#setup)
     - [Reproducing Figures 5 and 8 and Tables 1 and 2](#reproducing-figures-5-and-8-and-tables-1-and-2)
     - [Testing particular parameters on 3 servers](#testing-particular-parameters-on-3-servers)
+  - [Benchmarking other DORAMs](#benchmarking-other-dorams)
   - [Disclaimer](#disclaimer)
 
 
@@ -193,7 +196,25 @@ The concatenated output from all experiments will be written to `multi_server_re
 The named arguments to `run_3_server_experiment.sh` are the same as for `benchmark_doram_locally.sh`. Instead of passing network delay and bandwidh, there is one unnamed argument, which must come first, that specifies the PEM file to ssh into the DORAM_benchmark_ machines. Example:
 ```
 ./run_3_server_experiment.sh ../my_key.pem --prf-circuit-filename LowMC_reuse_wires.txt --build-bottom-level-at-startup false --num-query-tests 100000 --log-address-space 16 --num-levels 3 --log-amp-factor 4 --num-threads 1
+
 ```
+
+## Benchmarking other DORAMs
+
+In this section, we briefly comment on the procedure we took to benchmark other DORAM constructions. For more discussion, please see Section 9, Figures 5 and 6, and Appendix E. 
+
+* DuORAM: We benchmark DuORAM via their well documented [dockerization](https://git-crysp.uwaterloo.ca/avadapal/duoram). For varying `numops` and `size`, we summed `./run_experiment read size numops preproc 3P` and `./run_experiment readwrite size numops online 3P` to account for both the online and offline costs of DuORAM. More information can be found in their README.
+* 3PC-ORAM: We benchmarked 3PC-ORAM via the convenient [dockerization](https://git-crysp.uwaterloo.ca/iang/circuit-oram-docker/src/usenixsec23_artifact) graciously provided by the DuORAM team. Note that using `./run-experiment size numops` we benchmarked 3PC-ORAM's *reads*, which are no more expensive than writes.
+* Sqrt ORAM, Circuit ORAM, fss-FLORAM, cprg-FLORAM: We benchmark Sqrt ORAM, Circuit ORAM, fss-FLORAM, and cprg-FLORAM via Doerner and shelats' original [code](https://gitlab.com/neucrypt/floram). Due to a reliance on the somewhat supported [obliv-c](https://github.com/samee/obliv-c/) framework, we ran into some difficulties running their code. We try to give some helpful tips here (note: some of this steps may be redundent or unnecesseray -- we note what worked for us):  
+  * We started two Ubuntu 18.04.6 EC2 instances in a cluster placement group, one to be the "server" and the other to be the "client"
+  * To install the needed old version of `ocaml`, `sudo apt install opam`, `opam switch create 4.06.0` `eval $(opam env --switch=4.06.0)`
+  * To install the needed old version `gcc`, `sudo apt install -y gcc-9 g++-9 cpp-9`
+  * Then follow the [obliv-c](https://github.com/samee/obliv-c/) README to install. 
+  * Then follow the [FLORAM](https://gitlab.com/neucrypt/floram) README to install 
+  * Finally, on the "server" EC2 machine call `./bench_oram_write -e ADDRESS_SPACE_SIZE -o TYPE -i 1024` and then on the "client" EC2 machine call`./bench_oram_write -e ADDRESS_SPACE_SIZE -o TYPE -i 1024 -c ADDRESS_OF_SERVER` where `ADDRESS_SPACE_SIZE` is `N`, not `log_N`, `TYPE` can be either `{sqrt, circuit, fssl, fssl_cprg}`, `-i` marks the number of writes to be done, and `ADDRESS_OF_SERVER` is the IP address of server (make sure AWS security group is set to allow TCP trafic).
+* PFEDORAM: PFEDORAM is proprietary, and we obtained benchmarks directly from Bingsheng Zhang, one of the authors of the paper. 
+
+
 ## Disclaimer
 
 The GigaDORAM implementation in in this repo is *not* production ready. For instance, it may contain timing attacks and lacks several important optimizations. 
