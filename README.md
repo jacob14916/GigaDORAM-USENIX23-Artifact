@@ -1,8 +1,24 @@
 # GigaDORAM USENIX Security 2023 Artifact
 
-[Watch our How To Video for this artifact!](https://youtu.be/ZRLwktR-1cI)
+This repo contains the an implementation of GigaDORAM, the artifact for the USENIX23' paper "GigaDORAM: Breaking the Billion Address Barrier." In addition, this repository contains scripts for reproducing the experiments in the paper. This README describes how to reproduce our benchmarks (best explained [here](https://youtu.be/ZRLwktR-1cI)). 
+
+### What is GigaDORAM?
+
+GigaDORAM is a 3-party state-of-the-art Distributed ORAM protocol (DORAM) protocol. DORAM is a stateful multiparty cryptographic protocol. We envision initialzied with a secret shared `Memory` with 0-initialized `N` cells `Memory[0],...,Memory[N-1]`. Given [secret-shared](https://en.wikipedia.org/wiki/Secret_sharing) variables `X_query, Y_new, IsWrite` as input, a DORAM protocol returns secret shared `Memory[X_{query}]`, and if `IsWrite=1`, sets `Memory[X_query] := Y_new`. An execution of the protocol does not reveal *any* information. 
+
+GigaDORAM is specialized for the low-latency, large `N` setting. In these settings, GigaDORAM significantly outpreforms previous protocols. In other settings, GigaDORAM preforms comparably to previous prtocols. See the paper for more details.  
+
+### Guide to our benchmarks
+
+Roughly speaking, we benchmarked GigaDORAM in 2 different settings
+* Single machine tests: we execute GigaDORAM through 3 processes on the same machine. This enables us to artifically restrict the network between the machines processes via the `tc` command and benchmark the preformence of GigaDORAM in varying network settings.
+* Multi machine tests: we execute GigaDORAM on 3 different AWS EC2 instances in (cluster placement) on the same AWS region. These tests are meant to demonstrate the "real world" potential of GigaDORAM.    
+
+**The absolute best way to reproduce our benchmarks is [THIS HOW TO VIDEO](https://youtu.be/ZRLwktR-1cI).** If that's not your style, see the written instructions below. 
 
 - [GigaDORAM USENIX Security 2023 Artifact](#gigadoram-usenix-security-2023-artifact)
+    - [What is GigaDORAM?](#what-is-gigadoram)
+    - [Guide to our benchmarks](#guide-to-our-benchmarks)
     - [Authors (listed alphabetically)](#authors-listed-alphabetically)
   - [Single machine tests](#single-machine-tests)
     - [Requirements](#requirements)
@@ -14,6 +30,7 @@
     - [Setup](#setup)
     - [Reproducing Figures 5 and 8 and Tables 1 and 2](#reproducing-figures-5-and-8-and-tables-1-and-2)
     - [Testing particular parameters on 3 servers](#testing-particular-parameters-on-3-servers)
+  - [Disclaimer](#disclaimer)
 
 
 ### Authors (listed alphabetically)
@@ -22,9 +39,7 @@
 * Matan Shtepel, `matan dot shtepel at gmail dot com`
 * Jacob Zhang, `jacob dot b dot zhang at gmail dot com`
 
-This repo contains the artifact for the paper "GigaDORAM: Breaking the Billion Address Barrier" published in USENIX Security 2023. We provide directions and Python scripts for reproducing the experiments measuring GigaDORAM in the paper.
-
-[Watch our How To Video for this artifact!](https://youtu.be/ZRLwktR-1cI)
+The code in this repo was written by Jacob and Matan. 
 
 ## Single machine tests
 
@@ -179,3 +194,6 @@ The named arguments to `run_3_server_experiment.sh` are the same as for `benchma
 ```
 ./run_3_server_experiment.sh ../my_key.pem --prf-circuit-filename LowMC_reuse_wires.txt --build-bottom-level-at-startup false --num-query-tests 100000 --log-address-space 16 --num-levels 3 --log-amp-factor 4 --num-threads 1
 ```
+## Disclaimer
+
+The GigaDORAM implementation in in this repo is *not* production ready. For instance, it may contain timing attacks and lacks several important optimizations. 
